@@ -1,0 +1,43 @@
+#mainframe {
+	margin-left:auto; 
+	margin-right:auto; 
+	margin-top:10px; 
+	width:500px;
+	position:relative;
+}
+
+#inputs {
+	margin-left:10px;
+	width:480px;
+}
+
+#showArea {
+	width:480px;
+	margin-left:30px;
+	padding-bottom:30px;
+}
+#showArea2 {
+	width:480px;
+	margin-left:30px;
+	padding-bottom:30px;
+}
+
+#introframe {
+  display:none;
+  background:#dcedcf;
+  border:1px solid #dcedcf; padding:20px;
+  width:540px;
+  position:fixed; top:25%; left:44.5%; 
+  margin-left:-200px; margin-top:-100px;
+  _position: absolute; /* position fixed for IE6 */
+  _top:expression(documentElement.scrollTop+(documentElement.clientHeight-this.clientHeight)/2);
+  _margin-top:0;
+  z-index:2;
+}
+/* #introframe {
+	background-color: #dcedcf;
+	width:500px;
+	display:none;
+	position:fixed;
+}
+ */
