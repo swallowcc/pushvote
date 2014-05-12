@@ -25,6 +25,7 @@ function hide() {
 	$('#userList').hide();
 }
 $(function(){
+	$('#userList').draggable();
 	$('#mainframe, #introframe').shadow();
 	$('#sDate, #eDate').datepicker({ dateFormat: 'mm/dd' });
 	$('#append').click(function(){
@@ -119,5 +120,6 @@ $(function(){
 }).keydown(function(e) {
     if(e.which == 27){ 
         $('#introframe').hide(); 
+        $('#userList').hide(); 
     } 
 }); 
