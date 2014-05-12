@@ -13,14 +13,13 @@ function removeIt(id, str2) {
 	}
 	$('#showArea').html(str);
 	$('#showArea2').empty();
-	console.log(array.toString());
 }
 $(function(){
 	$('#mainframe, #introframe').shadow();
 	$('#sDate, #eDate').datepicker({ dateFormat: 'mm/dd' });
 	$('#append').click(function(){
 		$('#showArea2').empty();
-		if ($("input[name='oneline']:checkbox:checked").val() == 'true') {
+		if ($("input[name='input']:checked").val() == 'web' || $("input[name='input']:checked").val() == 'oneline') {
 			if ($.trim($('#target').val()).length != 0) {
 				array = [];
 				var tmps = $('#target').val().split(",");
@@ -81,12 +80,19 @@ $(function(){
 					$('#loading').hide();
 					break;
 				default:
-                	var response = jQuery.parseJSON(data);
+					var response = jQuery.parseJSON(data);
 					$('#showArea').empty();
-					$('#showArea2').empty().append("<table width='440' border='1' style='word-break:break-all;' id='mt'><tr><th width='26%'><center>選項</center></th><th width='12%'><center>得點</center></th><th><center>投票人ID</center></th></tr>");
-					for (var i = 0; i < response.length; i ++) {
+					$('#showArea2').empty().append("<div id='t1' style='text-align:right; width:440px; height:20px;'>總投票人數: "+response[response.length - 1].tu+" / 總投票數: "+response[response.length - 1].tv+"</div><table width='440' border='1' style='word-break:break-all;' id='mt'><tr style='background-color: silver;'><th width='26%'><center>選項</center></th><th width='12%'><center>得點</center></th><th><center>投票人ID</center></th></tr>");
+					for (var i = 0; i < response.length - 1; i ++) {
 						var voter = response[i].voter == null ? "" : response[i].voter ;
-						$('#mt').append("<tr><td><center>"+response[i].keyword+"</center></td><td><center>"+response[i].count+"<br/></center></td><td style='padding:5px;'>" + voter + "</td></tr>");
+						var myvote = 0;
+						if (!response[i].count == 0) {
+							myvote = ((response[i].count/response[response.length - 1].tv) * 100).toFixed(1) + "%";
+							console.log("response[i].count : " + response[i].count);
+							console.log("response[response.length - 1].tu : " + response[response.length - 1].tv);
+							console.log("myvote : " + myvote);
+						}
+						$('#mt').append("<tr><td><center>"+response[i].keyword+"</center></td><td><center>"+response[i].count+"<br/>("+myvote+")</center></td><td style='padding:5px;'>" + voter + "</td></tr>");
 					}
 					$('#mt').append("</table>");
 					$('#loading').hide();

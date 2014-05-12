@@ -17,12 +17,13 @@
 <body>
 <div id='mainframe'>
 <div id='inputs'>
-	<table width='500'><tr><td><h1>PTT推文投票統計</h1></td><td><span style='position:relative; top:10px;'><a href='#' id='intro'>使用說明</a></span></td></tr></table>
+	<table width='500'><tr><td><h1>PTT推文投票統計</h1>v1.3.7</td><td><span style='position:relative; top:10px;'><a href='#' id='intro'>使用說明</a></span></td></tr></table>
 	<hr />
 	<form id='myform'>
 		<input type='hidden' name='hiddenValue' id='hiddenValue' />
-		投票選項: <input type='text' name='target' id='target' /> <input type='button' value='新增選項' id='append' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type='checkbox' name='oneline' id='oneline' value='true'/>(簡易輸入)<br/>
-		文章網址: <input type='text' name='url' id='url' size='60'><br/>
+		輸入方式: <input type='radio' name='input' id='single' value='single' value='single' checked/>單筆輸入　<input type='radio' name='input' id='oneline' value='oneline'/>簡易輸入　<input type='radio' name='input' id='web' value='web'/>自動輸入(<font color='red'>*</font>beta)<br/>
+		投票選項: <input type='text' name='target' id='target' />　<input type='button' value='新增選項' id='append' /><br/>
+		文章網址: <input type='text' name='url' id='url' size='60' value='http://www.ptt.cc/bbs/Test/M.1399873101.A.813.html'><br/>
 		日期區間: <input type='text' name='sDate' id='sDate' readonly/> ~ <input type='text' name='eDate' id='eDate' readonly/><br />
 		重投設定: <input type='radio' name='revote' value='O'>允許  <input type='radio' name='revote' value='X' checked='checked'>不允許<br/>
 		可投票數: <input type='text' name='count' id='count' size='5' value='1'>&nbsp;&nbsp;&nbsp;&nbsp;<input type='button' value='送出查詢' id='send'><span id='loading' style='display:none; text-align:right; width:12px; height:12px; color:red;'><img style='width:40px; height:40px;'src='images/loading.gif' /> data loading now....</span>

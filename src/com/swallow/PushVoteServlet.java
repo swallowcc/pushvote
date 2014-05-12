@@ -36,21 +36,41 @@ public class PushVoteServlet extends HttpServlet {
 		String reVote = req.getParameter("revote");
 		String count = req.getParameter("count") == null || req.getParameter("count").trim().length() == 0 || req.getParameter("count").equals("0") ? "1" : req.getParameter("count");
 		String url = req.getParameter("url");
+		String input = req.getParameter("input");
 		if (url == null || url.trim().length() == 0 || !url.contains("ptt.cc")) {
 			resp.getWriter().println("4");
 		} else {
-			String[] option = options.split(",");
 			try {
 				Document doc = Jsoup.connect(url).timeout(10000).get();
+				Document doc2 = Jsoup.connect(url).timeout(10000).get();
+				Map<String, Integer> result = new HashMap<String, Integer>();			//裝載投票結果, 選項/總票數
+				Map<String, List<String>> user = new HashMap<String, List<String>>();	//裝載使用者資訊, ID/所投選項
+				Map<String, List<String>> info = new HashMap<String, List<String>>();	//裝載使用者資訊, 所投選項/IDs
+				List<String> userId = new ArrayList<String>();
+				
 				if (doc.select("title").text().contains(keyword)) {
-					if (!options.equals("none")) {
-						Map<String, Integer> result = new HashMap<String, Integer>();			//裝載投票結果, 選項/總票數
-						Map<String, List<String>> user = new HashMap<String, List<String>>();	//裝載使用者資訊, ID/所投選項
-						Map<String, List<String>> info = new HashMap<String, List<String>>();	//裝載使用者資訊, ID/所投選項
-						List<String> userId = new ArrayList<String>();
+					String[] option = null;
+					if (input != null) {
+						if (!options.equals("none") || input.equals("oneline")) {
+							option = options.split(",");
+						} else if (input.equals("web")) {
+							doc2.select("span").remove();
+							doc2.getElementsByClass("push").remove();
+							doc2.getElementsByClass("richcontent").remove();
+							doc2.getElementsByClass("article-metaline").remove();
+							doc2.getElementsByClass("article-metaline-right").remove();
+							String str = doc2.getElementById("main-content").text();
+							if (str.indexOf("<start>") != -1 && str.indexOf("</start>") != -1) {
+								str = str.substring(str.indexOf("<start>") + 7, str.indexOf("</start>"));
+								option = str.split(",");
+							} else {
+								resp.getWriter().println("1");
+							}
+							
+						}
 						for (int j = 0; j < option.length; j ++) {
-							result.put(option[j], 0); 											//將選項放入MAP, 初始化都是零票
-							info.put(option[j], null); 											//將選項放入MAP, 初始化都是零票
+							result.put(option[j], 0);		//將選項放入MAP, 初始化都是零票
+							info.put(option[j], null);		//將選項放入MAP, 初始化都是零票
 						}
 						Elements ele = doc.getElementsByClass("push");
 						for (int i = 0; i < ele.size(); i ++) {
@@ -59,28 +79,35 @@ public class PushVoteServlet extends HttpServlet {
 							
 							String vote = "";
 							if (content.contains("@")) {
-								vote = content.substring(content.indexOf(":") + 1, content.indexOf("@")).trim();
+								vote = content.substring(content.indexOf(":") + 1, content.indexOf("@")).replace("　", "").trim();
 							}
 							String date = ele.get(i).select("span").get(3).text().substring(0, 5);
 							if (sDate == null || eDate == null 
 									|| sDate.trim().length() == 0 || eDate.trim().length() == 0) {	//不開啓日期過濾
 								process(id, vote, result, user, count, reVote, userId, info);
-							} else if (dateCheck(date, sDate, eDate)) {		//開啟日期過濾
+							} else if (dateCheck(date, sDate, eDate)) {	//開啟日期過濾
 								process(id, vote, result, user, count, reVote, userId, info);
 							}
 						}
 						JSONArray joArray = new JSONArray();
+						int totalVoteCount = 0;
 						for (int i = 0; i < option.length; i ++) {
 							JSONObject jo = new JSONObject();
 							jo.put("keyword", option[i]);
 							jo.put("count", result.get(option[i]));
 							jo.put("voter", info.get(option[i]));
+							totalVoteCount = totalVoteCount + (info.get(option[i]) == null ? 0 : info.get(option[i]).size());
 							joArray.add(jo);
 						}
+						JSONObject jo2 = new JSONObject();
+						jo2.put("tv", totalVoteCount);
+						jo2.put("tu", user.size());
+						joArray.add(jo2);
 						resp.getWriter().write(joArray.toJSONString());
-					} else {
+					} else if (input == null) {
 						resp.getWriter().println("1");
 					}
+
 				} else {
 					resp.getWriter().println("0");	
 				}
@@ -98,13 +125,13 @@ public class PushVoteServlet extends HttpServlet {
 	public static void process (String id, String vote, Map<String, Integer> result, 
 			Map<String, List<String>> user, String co, String reVote, List<String> userId,
 			Map<String, List<String>> info) {
-
+		
 		int voted = 0;
 		if (user.get(id) != null) {
 			voted = user.get(id).size();
 		}
 		int count = Integer.parseInt(co);
-		if (!user.containsKey(id) && result.containsKey(vote) && voted == 0) {				
+		if (!user.containsKey(id) && result.containsKey(vote) && voted == 0) {	
 			//還沒投過, 直接塞值進去即可
 			result.put(vote, result.get(vote) + 1);
 			List<String> tmp = new ArrayList<String>();
@@ -125,12 +152,12 @@ public class PushVoteServlet extends HttpServlet {
 		} else if (user.containsKey(id) && result.containsKey(vote) 
 				&& reVote.equals("O") && count == 1 && voted == 1) {
 			//已經投過，可以重投，不過只有一票，只要直接蓋過去就好 
-			result.put(vote, result.get(vote) == null ? 0 : result.get(vote) + 1); //給這次要投的加一票。
-			String preVoteResult = user.get(id).get(0);					//第一次投的結果
-			result.put(preVoteResult, result.get(preVoteResult) - 1); 	//給上次投的扣一票。
-			List<String> tmp = new ArrayList<String>();					//重新new個List
-			tmp.add(vote);												//把選項加進去
-			user.put(id, tmp);											//直接蓋過去就好
+			result.put(vote, result.get(vote) == null ? 0 : result.get(vote) + 1);	//給這次要投的加一票。
+			String preVoteResult = user.get(id).get(0);								//第一次投的結果
+			result.put(preVoteResult, result.get(preVoteResult) - 1);				//給上次投的扣一票。
+			List<String> tmp = new ArrayList<String>();								//重新new個List
+			tmp.add(vote);															//把選項加進去
+			user.put(id, tmp);														//直接蓋過去就好
 			userId.add(id);
 
 			List<String> tmpString = info.get(preVoteResult);
@@ -149,13 +176,13 @@ public class PushVoteServlet extends HttpServlet {
 			info.put(vote, tt);
 
 		} else if (user.containsKey(id) && result.containsKey(vote) 
-				&& reVote.equals("X") && count > 1 && count >= voted) {													
+				&& reVote.equals("X") && count > 1 && count > voted) {
 			//已經投過，不可以重投，但有一票以上可以投，只要沒有超出限定的票數，可以繼續給他投。
-			List<String> userObj = user.get(id);						//這個ID投過的票
-			if (!userObj.contains(vote)) {								//看看有沒有投過這個選項
-				userObj.add(vote);										//沒有的話加進List記錄內
-				user.put(id, userObj);									//再把資料放進userMap
-				result.put(vote, result.get(vote) + 1);					//給這次要投的加一票。
+			List<String> userObj = user.get(id);		//這個ID投過的票
+			if (!userObj.contains(vote)) {				//看看有沒有投過這個選項
+				userObj.add(vote);						//沒有的話加進List記錄內
+				user.put(id, userObj);					//再把資料放進userMap
+				result.put(vote, result.get(vote) + 1);	//給這次要投的加一票。
 				userId.add(id);
 				List<String> tt = info.get(vote);
 				if (tt == null) {
@@ -174,28 +201,40 @@ public class PushVoteServlet extends HttpServlet {
 			List<String> userObj = user.get(id);							//這個ID投過的票
 			if (!userObj.contains(vote) && count == voted) {				//沒有投過這個選項, 且票數已經滿了
 				String preVoteResult = user.get(id).get(0);					//先找出第一次投的結果
-				result.put(preVoteResult, result.get(preVoteResult) - 1); 	//給第一次投的扣一票。
+				result.put(preVoteResult, result.get(preVoteResult) - 1);	//給第一次投的扣一票。
 				userObj.remove(preVoteResult);								//把第一次投的結果從List移除。
 				result.put(vote, result.get(vote) + 1);						//給這次要投的加一票。
 				userObj.add(vote);											//沒有的話加進List記錄內
 				user.put(id, userObj);										//再把資料放進userMap
+				info.get(preVoteResult).remove(id);
+				List<String> tt = info.get(vote);	
+				if (tt == null) {
+					tt = new ArrayList<String>();
+					tt.add(id);
+				} else {
+					if (!tt.contains(id)) {
+						tt.add(id);
+					}
+				}
+				info.put(vote, tt);
 				
-			} else if (!userObj.contains(vote) && count >= voted) {			//沒有投過這個選項, 票數尚未滿
-				result.put(vote, result.get(vote) + 1);						//給這次要投的加一票。
-				userObj.add(vote);											//沒有的話加進List記錄內
-				user.put(id, userObj);										//再把資料放進userMap
+			} else if (!userObj.contains(vote) && count >= voted) {	//沒有投過這個選項, 票數尚未滿
+				result.put(vote, result.get(vote) + 1);				//給這次要投的加一票。
+				userObj.add(vote);									//沒有的話加進List記錄內
+				user.put(id, userObj);								//再把資料放進userMap
+				
+				List<String> tt = info.get(vote);
+				if (tt == null) {
+					tt = new ArrayList<String>();
+					tt.add(id);
+				} else {
+					if (!tt.contains(id)) {
+						tt.add(id);
+					}
+				}
+				info.put(vote, tt);
 			}
 			userId.add(id);
-			List<String> tt = info.get(vote);
-			if (tt == null) {
-				tt = new ArrayList<String>();
-				tt.add(id);
-			} else {
-				if (!tt.contains(id)) {
-					tt.add(id);
-				}
-			}
-			info.put(vote, tt);
 		}
 	}
 	
