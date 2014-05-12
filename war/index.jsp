@@ -8,11 +8,13 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <script src="//rawgithub.com/sydlawrence/jQuery-Shadow/master/jquery.shadow/jquery.shadow.js"></script>
-<script src="//rawgit.com/swallowcc/pushvote/master/war/js/script.js"></script>
+<script src="/js/script.js"></script>
+<!-- <script src="//rawgit.com/swallowcc/pushvote/master/war/js/script.js"></script> -->
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="//rawgithub.com/sydlawrence/jQuery-Shadow/master/jquery.shadow/jquery.shadow.css">
 <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery.ui.all.css">
-<link rel="stylesheet" href="//rawgit.com/swallowcc/pushvote/master/war/css/style.css">
+<link rel="stylesheet" href="/css/style.css">
+<!-- <link rel="stylesheet" href="//rawgit.com/swallowcc/pushvote/master/war/css/style.css"> -->
 </head>
 <body>
 <div id='mainframe'>
@@ -54,5 +56,6 @@
 	<input type='button' id='btn' value='close'>
 	</div>
 </div>
+<div id='userList' style='word-break:break-all;'></div>
 </body>
 </html>

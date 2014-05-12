@@ -1,5 +1,6 @@
 var array = [];
 var tmp = 0;
+var ttt;
 function removeIt(id, str2) {
 	$('#' + id).remove();
 	tmp -= 1;
@@ -13,6 +14,15 @@ function removeIt(id, str2) {
 	}
 	$('#showArea').html(str);
 	$('#showArea2').empty();
+}
+function userList(voter) {
+//	var voter = response[id].voter == null ? "" : response[id].voter ;
+	$('#userList').show();
+	$('#userList').html(voter);
+	$('#userList').append("<hr/><center><input type='button' value='close' onclick='hide()' /></center>");
+}
+function hide() {
+	$('#userList').hide();
 }
 $(function(){
 	$('#mainframe, #introframe').shadow();
@@ -87,14 +97,17 @@ $(function(){
 				default:
 					var response = jQuery.parseJSON(data);
 					$('#showArea').empty();
-					$('#showArea2').empty().append("<div id='t1' style='text-align:right; width:440px; height:20px;'>總投票人數: "+response[response.length - 1].tu+" / 總投票數: "+response[response.length - 1].tv+"</div><table width='440' border='1' style='word-break:break-all;' id='mt'><tr style='background-color: silver;'><th width='26%'><center>選項</center></th><th width='12%'><center>得點</center></th><th><center>投票人ID</center></th></tr>");
+					$('#showArea2').empty().append("<div id='t1' style='text-align:right; width:440px; height:20px;'>總投票人數: "+response[response.length - 1].tu+" / 總投票數: "+response[response.length - 1].tv+"</div><table width='440' border='1' style='word-break:break-all; text-align:center;' id='mt'><tr style='background-color: silver; text-align:center;'><th width='32%' style='text-align:center;'>選項</th><th width='15%' style='text-align:center;'>得點</th><th width='15%' style='text-align:center;'>得票率</th><th width='15%' style='text-align:center;'>得票分佈</th><th style='text-align:center;'>投票人ID</th></tr>");
 					for (var i = 0; i < response.length - 1; i ++) {
 						var voter = response[i].voter == null ? "" : response[i].voter ;
 						var myvote = 0;
+						var myvote2 = 0;
 						if (!response[i].count == 0) {
-							myvote = ((response[i].count/response[response.length - 1].tv) * 100).toFixed(1) + "%";
+							myvote = ((response[i].count/response[response.length - 1].tv) * 100).toFixed(1) + "%"; 	//得票率
+							myvote2 = ((response[i].count/response[response.length - 1].tu) * 100).toFixed(1) + "%";	//得票分佈
 						}
-						$('#mt').append("<tr><td><center>"+response[i].keyword+"</center></td><td><center>"+response[i].count+"<br/>("+myvote+")</center></td><td style='padding:5px;'>" + voter + "</td></tr>");
+						
+						$('#mt').append("<tr><td>"+response[i].keyword+"</td><td>"+response[i].count+"</td><td>"+myvote+"</td><td>"+myvote2+"</td><td><img src='/images/user.png' onclick=\"userList('"+ voter +"')\" style='cursor: pointer; width:30px; height:30px;'></td></tr>");
 					}
 					$('#mt').append("</table>");
 					$('#loading').hide();

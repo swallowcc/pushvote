@@ -34,10 +34,16 @@
   _margin-top:0;
   z-index:2;
 }
-/* #introframe {
-	background-color: #dcedcf;
-	width:500px;
-	display:none;
-	position:fixed;
+
+#userList {
+  display:none;	
+  background:#dcedcf;
+  border:1px solid #dcedcf; padding:20px;
+  width:300px;
+  position:fixed; top:25%; left:44.5%; 
+  margin-left:200px; margin-top:-150px;
+  _position: absolute; /* position fixed for IE6 */
+  _top:expression(documentElement.scrollTop+(documentElement.clientHeight-this.clientHeight)/2);
+  _margin-top:0;
+  z-index:2;
 }
- */
