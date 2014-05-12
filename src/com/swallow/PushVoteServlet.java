@@ -26,7 +26,7 @@ public class PushVoteServlet extends HttpServlet {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		System.out.println("application version 0.2.6");
+		System.out.println("application version 1.3.7");
 		resp.setContentType("text/plain");
 		resp.setCharacterEncoding("UTF-8");
 		String keyword = "[推投]";
@@ -44,8 +44,8 @@ public class PushVoteServlet extends HttpServlet {
 				Document doc = Jsoup.connect(url).timeout(10000).get();
 				Document doc2 = Jsoup.connect(url).timeout(10000).get();
 				Map<String, Integer> result = new HashMap<String, Integer>();			//裝載投票結果, 選項/總票數
-				Map<String, List<String>> user = new HashMap<String, List<String>>();	//裝載使用者資訊, ID/所投選項
-				Map<String, List<String>> info = new HashMap<String, List<String>>();	//裝載使用者資訊, 所投選項/IDs
+				Map<String, List<String>> user = new HashMap<String, List<String>>();	//裝載使用者資訊, IDs/所投選項
+				Map<String, List<String>> info = new HashMap<String, List<String>>();	//裝載選票資訊, 所投選項/IDs
 				List<String> userId = new ArrayList<String>();
 				
 				if (doc.select("title").text().contains(keyword)) {
@@ -66,7 +66,6 @@ public class PushVoteServlet extends HttpServlet {
 							} else {
 								resp.getWriter().println("1");
 							}
-							
 						}
 						for (int j = 0; j < option.length; j ++) {
 							result.put(option[j], 0);		//將選項放入MAP, 初始化都是零票

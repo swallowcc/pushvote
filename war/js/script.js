@@ -9,7 +9,7 @@ function removeIt(id, str2) {
     }
 	var str = "";
 	for (var i = 0; i < array.length; i ++) {
-		str += "<br/><span style='padding-left:20px;' id="+i+"><img width='12' height='12' src='/images/del.png' onclick=\"removeIt('"+i +"', '"+array[i]+"')\" style='cursor: pointer;' />　　　"+array[i]+"</span>";
+		str += "<br/><span style='padding-left:20px;' id="+i+"><img width='12' height='12' src='https://rawgit.com/swallowcc/pushvote/master/war/images/del.png' onclick=\"removeIt('"+i +"', '"+array[i]+"')\" style='cursor: pointer;' />　　　"+array[i]+"</span>";
 	}
 	$('#showArea').html(str);
 	$('#showArea2').empty();
@@ -51,6 +51,11 @@ $(function(){
 		$('#introframe').hide();
 	});
 	$('#send').click(function(){
+		if ($("input[name='input']:checked").val() == 'single' && array.length == 0) {
+			alert('抱歉, 投票選項未輸入!');
+			$('#loading').hide();
+			return false;
+		}
 		$('#loading').show();
 		$('#hiddenValue').val(array.toString());
 		$.ajax({
