@@ -88,9 +88,6 @@ $(function(){
 						var myvote = 0;
 						if (!response[i].count == 0) {
 							myvote = ((response[i].count/response[response.length - 1].tv) * 100).toFixed(1) + "%";
-							console.log("response[i].count : " + response[i].count);
-							console.log("response[response.length - 1].tu : " + response[response.length - 1].tv);
-							console.log("myvote : " + myvote);
 						}
 						$('#mt').append("<tr><td><center>"+response[i].keyword+"</center></td><td><center>"+response[i].count+"<br/>("+myvote+")</center></td><td style='padding:5px;'>" + voter + "</td></tr>");
 					}
