@@ -16,7 +16,6 @@ function removeIt(id, str2) {
 	$('#showArea2').empty();
 }
 function userList(voter) {
-//	var voter = response[id].voter == null ? "" : response[id].voter ;
 	$('#userList').show();
 	$('#userList').html(voter);
 	$('#userList').append("<hr/><center><input type='button' value='close' onclick='hide()' /></center>");
@@ -26,7 +25,7 @@ function hide() {
 }
 $(function(){
 	$("#copys").zclip({
-	      path:"ZeroClipboard.swf",
+	      path:"js/ZeroClipboard.swf",
 	      copy:function(){return $("input#dynamic").val();}
 	});
 	$('#userList').draggable();
