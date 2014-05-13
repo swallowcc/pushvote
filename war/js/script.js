@@ -102,7 +102,7 @@ $(function(){
 				default:
 					var response = jQuery.parseJSON(data);
 					$('#showArea').empty();
-					$('#showArea2').empty().append("<div id='t1' style='text-align:right; width:440px; height:20px;'>總投票人數: "+response[response.length - 1].tu+" / 總投票數: "+response[response.length - 1].tv+" / <a href='#' id='copyss'>複製結果</a></div><table width='440' border='1' style='word-break:break-all; text-align:center;' id='mt'><tr style='background-color: silver; text-align:center;'><th width='40%' style='text-align:center;'>選項</th><th width='15%' style='text-align:center;'>得點</th><th width='15%' style='text-align:center;'>得票率</th><th width='15%' style='text-align:center;'>得票分佈</th><th style='text-align:center;'>投票人ID</th></tr>");
+					$('#showArea2').empty().append("<div id='t1' style='text-align:right; width:440px; height:20px;'>總投票人數: "+response[response.length - 1].tu+" / 總投票數: "+response[response.length - 1].tv+" / <a href='#' id='copys'>複製結果</a></div><table width='440' border='1' style='word-break:break-all; text-align:center;' id='mt'><tr style='background-color: silver; text-align:center;'><th width='40%' style='text-align:center;'>選項</th><th width='15%' style='text-align:center;'>得點</th><th width='15%' style='text-align:center;'>得票率</th><th width='15%' style='text-align:center;'>得票分佈</th><th style='text-align:center;'>投票人ID</th></tr>");
 					for (var i = 0; i < response.length - 1; i ++) {
 						var voter = response[i].voter == null ? "" : response[i].voter ;
 						var myvote = 0;

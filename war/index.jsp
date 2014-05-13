@@ -18,7 +18,7 @@
 <body>
 <div id='mainframe'>
 <div id='inputs'>
-	<table width='500'><tr><td><h1>PTT推文投票統計</h1>v1.3.8</td><td><span style='position:relative; top:10px;'><a href='#' id='intro'>使用說明</a></span></td></tr></table>
+	<table width='500'><tr><td><h1>PTT推文投票統計</h1>v1.3.9</td><td><span style='position:relative; top:10px;'><a href='#' id='intro'>使用說明</a></span></td></tr></table>
 	<hr />
 	<form id='myform'>
 		<input type='hidden' name='hiddenValue' id='hiddenValue' />
