@@ -7,9 +7,10 @@
 <title>推文投票計數器</title>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script src="//rawgit.com/swallowcc/pushvote/master/war/js/jquery.zclip.min.js"></script>
+<script src="/js/jquery.zclip.min.js"></script>
 <script src="//rawgithub.com/sydlawrence/jQuery-Shadow/master/jquery.shadow/jquery.shadow.js"></script>
-<script src="//rawgit.com/swallowcc/pushvote/master/war/js/script.js"></script>
+<!-- <script src="//rawgit.com/swallowcc/pushvote/master/war/js/script.js"></script> -->
+<script src="/js/script.js"></script>
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="//rawgithub.com/sydlawrence/jQuery-Shadow/master/jquery.shadow/jquery.shadow.css">
 <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery.ui.all.css">
@@ -18,7 +19,7 @@
 <body>
 <div id='mainframe'>
 <div id='inputs'>
-	<table width='500'><tr><td><h1>PTT推文投票統計</h1>v1.3.9</td><td><span style='position:relative; top:10px;'><a href='#' id='intro'>使用說明</a></span></td></tr></table>
+	<table width='500'><tr><td><h1>PTT推文投票統計</h1>v1.4.0</td><td><span style='position:relative; top:10px;'><a href='#' id='intro'>使用說明</a></span></td></tr></table>
 	<hr />
 	<form id='myform'>
 		<input type='hidden' name='hiddenValue' id='hiddenValue' />

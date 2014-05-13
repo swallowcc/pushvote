@@ -16,18 +16,19 @@ function removeIt(id, str2) {
 	$('#showArea2').empty();
 }
 function userList(voter) {
+	$('#dynamic').val(voter);
 	$('#userList').show();
 	$('#userList').html(voter);
 	$('#userList').append("<hr/><center><input type='button' value='close' onclick='hide()' /></center>");
+	$("#copys").zclip({
+	      path:"js/ZeroClipboard.swf",
+	      copy:function(){return $("input#dynamic").val();}
+	});
 }
 function hide() {
 	$('#userList').hide();
 }
 $(function(){
-	$("#copys").zclip({
-	      path:"js/ZeroClipboard.swf",
-	      copy:function(){return $("input#dynamic").val();}
-	});
 	$('#userList').draggable();
 	$('#mainframe, #introframe').shadow();
 	$('#sDate, #eDate').datepicker({ dateFormat: 'mm/dd' });
