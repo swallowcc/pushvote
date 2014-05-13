@@ -24,7 +24,8 @@
 	<form id='myform'>
 		<input type='hidden' name='hiddenValue' id='hiddenValue' />
 		<input type="hidden" id="dynamic">
-		輸入方式: <input type='radio' name='input' id='single' value='single' value='single' checked/>單筆輸入　<input type='radio' name='input' id='oneline' value='oneline'/>簡易輸入　<input type='radio' name='input' id='web' value='web'/>自動輸入(beta)<br/>
+		輸入方式: <input type='radio' name='input' id='single' value='single' value='single' checked/>單筆輸入　<input type='radio' name='input' id='oneline' value='oneline'/>簡易輸入　
+		<!-- <input type='radio' name='input' id='web' value='web'/>自動輸入(beta)--><br/>
 		投票選項: <input type='text' name='target' id='target' />　<input type='button' value='新增選項' id='append' /><br/>
 		文章網址: <input type='text' name='url' id='url' size='60'><br/>
 		日期區間: <input type='text' name='sDate' id='sDate' readonly/> ~ <input type='text' name='eDate' id='eDate' readonly/><br />
