@@ -7,22 +7,22 @@
 <title>推文投票計數器</title>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script src="//rawgit.com/swallowcc/pushvote/master/war/js/jquery.zclip.min.js"></script>
 <script src="//rawgithub.com/sydlawrence/jQuery-Shadow/master/jquery.shadow/jquery.shadow.js"></script>
-<script src="/js/script.js"></script>
-<!-- <script src="//rawgit.com/swallowcc/pushvote/master/war/js/script.js"></script> -->
+<script src="//rawgit.com/swallowcc/pushvote/master/war/js/script.js"></script>
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="//rawgithub.com/sydlawrence/jQuery-Shadow/master/jquery.shadow/jquery.shadow.css">
 <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery.ui.all.css">
-<link rel="stylesheet" href="/css/style.css">
-<!-- <link rel="stylesheet" href="//rawgit.com/swallowcc/pushvote/master/war/css/style.css"> -->
+<link rel="stylesheet" href="//rawgit.com/swallowcc/pushvote/master/war/css/style.css">
 </head>
 <body>
 <div id='mainframe'>
 <div id='inputs'>
-	<table width='500'><tr><td><h1>PTT推文投票統計</h1>v1.3.7</td><td><span style='position:relative; top:10px;'><a href='#' id='intro'>使用說明</a></span></td></tr></table>
+	<table width='500'><tr><td><h1>PTT推文投票統計</h1>v1.3.8</td><td><span style='position:relative; top:10px;'><a href='#' id='intro'>使用說明</a></span></td></tr></table>
 	<hr />
 	<form id='myform'>
 		<input type='hidden' name='hiddenValue' id='hiddenValue' />
+		<input type="hidden" id="dynamic">
 		輸入方式: <input type='radio' name='input' id='single' value='single' value='single' checked/>單筆輸入　<input type='radio' name='input' id='oneline' value='oneline'/>簡易輸入　<input type='radio' name='input' id='web' value='web'/>自動輸入(beta)<br/>
 		投票選項: <input type='text' name='target' id='target' />　<input type='button' value='新增選項' id='append' /><br/>
 		文章網址: <input type='text' name='url' id='url' size='60'><br/>
@@ -56,6 +56,6 @@
 	<input type='button' id='btn' value='close'>
 	</div>
 </div>
-<div id='userList' style='word-break:break-all;'></div>
+<div id='userList' style='word-break:break-all;word-wrap: break-word;'></div>
 </body>
 </html>

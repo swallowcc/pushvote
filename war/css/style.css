@@ -47,3 +47,13 @@
   _margin-top:0;
   z-index:2;
 }
+#userList2 {
+  background:#dcedcf;
+  width:280px;
+  position:fixed; top:25%; left:44.5%; 
+  margin-left:200px; margin-top:-150px;
+  _position: absolute; /* position fixed for IE6 */
+  _top:expression(documentElement.scrollTop+(documentElement.clientHeight-this.clientHeight)/2);
+  _margin-top:0;
+  z-index:3;
+}
