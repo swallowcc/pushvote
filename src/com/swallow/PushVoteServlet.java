@@ -23,10 +23,21 @@ import org.jsoup.select.Elements;
 @SuppressWarnings("serial")
 public class PushVoteServlet extends HttpServlet {
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		System.out.println("application version 1.3.7");
+		System.out.println("GET");
+		this.doProcess(req, resp);
+	}
+	
+	@Override
+	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		System.out.println("POST");
+		this.doProcess(req, resp);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void doProcess(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		System.out.println("application version 1.5.0");
 		resp.setContentType("text/plain");
 		resp.setCharacterEncoding("UTF-8");
 		String keyword = "[推投]";
@@ -77,15 +88,33 @@ public class PushVoteServlet extends HttpServlet {
 							String content = ele.get(i).select("span").get(2).text();
 							
 							String vote = "";
+							String[] tmp = null; 
 							if (content.contains("@")) {
-								vote = content.substring(content.indexOf(":") + 1, content.indexOf("@")).replace("　", "").trim();
+								
+								if (content.indexOf("@") != content.lastIndexOf("@")) {	//多個 @, 也就是有可能多筆投票
+									String tmpContent = content.substring(content.indexOf(":") + 1, content.lastIndexOf("@"));
+									tmp = tmpContent.split("@");
+								} else {												//位置在同一個點，所以應該是單筆投票
+									vote = content.substring(content.indexOf(":") + 1, content.indexOf("@")).replace("　", "").trim();
+								}
 							}
 							String date = ele.get(i).select("span").get(3).text().substring(0, 5);
-							if (sDate == null || eDate == null 
-									|| sDate.trim().length() == 0 || eDate.trim().length() == 0) {	//不開啓日期過濾
-								process(id, vote, result, user, count, reVote, userId, info);
-							} else if (dateCheck(date, sDate, eDate)) {	//開啟日期過濾
-								process(id, vote, result, user, count, reVote, userId, info);
+							
+							if (!vote.equals("") && tmp == null) {
+								if (sDate == null || eDate == null || sDate.trim().length() == 0 || eDate.trim().length() == 0) {	//不開啓日期過濾
+									process(id, vote, result, user, count, reVote, userId, info);
+								} else if (dateCheck(date, sDate, eDate)) {	//開啟日期過濾
+									process(id, vote, result, user, count, reVote, userId, info);
+								}
+							} else if (vote.equals("") && tmp != null) {	//多票數回圈		
+								for (int k = 0; k < tmp.length; k ++) {
+									String tmpVote = tmp[k] == null || tmp[k].trim().length() == 0 ? "" : tmp[k].replace("　", "").trim();
+									if (sDate == null || eDate == null || sDate.trim().length() == 0 || eDate.trim().length() == 0) {	//不開啓日期過濾
+										process(id, tmpVote, result, user, count, reVote, userId, info);
+									} else if (dateCheck(date, sDate, eDate)) {	//開啟日期過濾
+										process(id, tmpVote, result, user, count, reVote, userId, info);
+									}
+								}
 							}
 						}
 						JSONArray joArray = new JSONArray();

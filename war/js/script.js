@@ -75,7 +75,7 @@ $(function(){
 		$('#hiddenValue').val(array.toString());
 		$.ajax({
 			url: "pushvote",
-			type: "get",
+			type: "post",
 			data: $('#myform').serialize(),
 			success: function(data) {
 				switch (parseInt(data)) {
