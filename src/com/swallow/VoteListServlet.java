@@ -50,6 +50,7 @@ public class VoteListServlet extends HttpServlet {
 		resp.setCharacterEncoding("UTF-8");
 		String boardName = req.getParameter("BN");
 		String getday = req.getParameter("getday") == null || req.getParameter("getday").trim().length() == 0 ? "3" : req.getParameter("getday");
+		int getdayInt = Integer.parseInt(getday) > 7 ? 7 : Integer.parseInt(getday);
 		int nowPage = nowPageNm(boardName);
 		System.out.println("boardNm : " + boardName + ", getDay : " + getday + ", nowPage : " + nowPage);
 		boolean flag = true;
@@ -66,7 +67,7 @@ public class VoteListServlet extends HttpServlet {
 				String link = rent.get(i).getElementsByClass("title").select("a").attr("href");
 				SimpleDateFormat sdf = new SimpleDateFormat("M/dd");
 				String sDate = sdf.format(new Date());
-				String eDate = sdf.format(new Date(new Date().getTime() - (86400000 * Integer.parseInt(getday))));
+				String eDate = sdf.format(new Date(new Date().getTime() - (86400000 * getdayInt)));
 				System.out.println("#date info : " + date + ", " + sDate + ", " + eDate + ", " + dateCheck(date, sDate, eDate));
 				if (dateCheck(date, sDate, eDate)) {
 					if (title.startsWith("[推投]")) {
