@@ -14,18 +14,29 @@
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="//rawgithub.com/sydlawrence/jQuery-Shadow/master/jquery.shadow/jquery.shadow.css">
 <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery.ui.all.css">
-<link rel="stylesheet" href="//rawgit.com/swallowcc/pushvote/master/war/css/style.css">
+<link rel="stylesheet" href="/css/style.css">
+<!-- <link rel="stylesheet" href="//rawgit.com/swallowcc/pushvote/master/war/css/style.css"> -->
 </head>
 <body>
 <div id='mainframe'>
 <div id='inputs'>
-	<table width='500'><tr><td><h1>PTT推文投票統計</h1>v1.5.0</td><td><span style='position:relative; top:10px;'><a href='#' id='intro'>使用說明</a></span></td></tr></table>
+	<table width='500'>
+		<tr>
+			<td>
+				<h1>PTT推文投票統計</h1>v1.6.2
+			</td>
+			<td>
+				<span style='position:relative; top:10px;'><a href='#' id='intro'>使用說明</a></span><br/>
+				<span style='position:relative; top:10px;'><a href='#' id='votelist'>最近一周的投票清單</a></span><br/>
+			</td>
+		</tr>
+	</table>
 	<hr />
 	<form id='myform'>
 		<input type='hidden' name='hiddenValue' id='hiddenValue' />
 		<input type="hidden" id="dynamic">
 		輸入方式: <input type='radio' name='input' id='single' value='single' value='single' checked/>單筆輸入　<input type='radio' name='input' id='oneline' value='oneline'/>簡易輸入　
-		<!-- <input type='radio' name='input' id='web' value='web'/>自動輸入(beta)--><br/>
+		<input type='radio' name='input' id='web' value='web'/>自動輸入(beta)<br/>
 		投票選項: <input type='text' name='target' id='target' />　<input type='button' value='新增選項' id='append' /><br/>
 		文章網址: <input type='text' name='url' id='url' size='60'><br/>
 		日期區間: <input type='text' name='sDate' id='sDate' readonly/> ~ <input type='text' name='eDate' id='eDate' readonly/><br />
@@ -38,19 +49,21 @@
 <div id='showArea2'></div>
 <hr/>
 </div>
-<div id='introframe'>
+<div id='introframe' class='greenframe'>
 	<hr/>
 	1. PTT的文章TAG請用 [<strong>推投</strong>] 才會允許計算。<br/><p><p>
 	
 	2. 選項可以用中文、日文、英文、數字，不接受特殊符號。<br/><p><p>
-	3. 選取允許重投，系統將取使用者最新一次的投票記錄。<br/>
+	3. 主辦者若允許使用者重投，系統將取使用者最新一次的投票記錄。<br/>
 	&nbsp;&nbsp;&nbsp;&nbsp;如果不允許重投，則不管使用者推文幾次都只會使用第一次的記錄。<br/><p><p>
 	4. 網址部分請在PTT的文章按大寫Q，或於文章底部都可以找到該文章網址。<br/><p><p>
 	5. 票數選項可以決定每個使用者可以投幾票，若准許投三票，<br/>
-	&nbsp;&nbsp;&nbsp;&nbsp;則使用者可以推文三次進行投票。(重複內容視為一筆記錄)<br/><p><p>
+	&nbsp;&nbsp;&nbsp;&nbsp;則使用者可以使用一行推文或推文三次進行投票。(重複內容視為一筆記錄)<br/><p><p>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;使用一行範例: A@B@C@ 這樣系統會接受A B C三票的記錄。<br/><p><p> 
 	6. 投票推文加半形 "@" 符號完結，完結後即可聊天推文。<br/><p><p>
 	7. 發文者的簽名檔請勿擺放符合投票格式的推文式簽名檔，此將影響計算結果。<br/><p><p>
 	8. 日期區間若要填寫的話，請兩個都填，若無填寫就不會使用日期過濾。<br/><p><p>
+	9. 輸入方式及投票清單複製方式請按 <a href='http://www.ptt.cc/bbs/C_Chat/M.1399973194.A.F8E.html' target='_blank'>這邊</a> 觀看。<br/><p><p>
 	註：只要投票格式不符合，就不會列入計算，<br/>
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;因此即使允許重投，推發一般聊天文也不會洗掉結果。
 	<hr/>
@@ -58,6 +71,7 @@
 	<input type='button' id='btn' value='close'>
 	</div>
 </div>
-<div id='userList' style='word-break:break-all;word-wrap: break-word;'></div>
+<div id='userList' class='greenframe' style='word-break:break-all;word-wrap: break-word;'></div>
+<div id='votelistframe' class='greenframe' style='word-break:break-all;word-wrap: break-word;'></div>
 </body>
 </html>

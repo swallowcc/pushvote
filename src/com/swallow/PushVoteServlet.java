@@ -37,7 +37,6 @@ public class PushVoteServlet extends HttpServlet {
 	
 	@SuppressWarnings("unchecked")
 	public void doProcess(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		System.out.println("application version 1.5.0");
 		resp.setContentType("text/plain");
 		resp.setCharacterEncoding("UTF-8");
 		String keyword = "[推投]";
@@ -53,7 +52,7 @@ public class PushVoteServlet extends HttpServlet {
 		} else {
 			try {
 				Document doc = Jsoup.connect(url).timeout(10000).get();
-				Document doc2 = Jsoup.connect(url).timeout(10000).get();
+				Document doc2 = doc.clone();
 				Map<String, Integer> result = new HashMap<String, Integer>();			//裝載投票結果, 選項/總票數
 				Map<String, List<String>> user = new HashMap<String, List<String>>();	//裝載使用者資訊, IDs/所投選項
 				Map<String, List<String>> info = new HashMap<String, List<String>>();	//裝載選票資訊, 所投選項/IDs
@@ -79,8 +78,8 @@ public class PushVoteServlet extends HttpServlet {
 							}
 						}
 						for (int j = 0; j < option.length; j ++) {
-							result.put(option[j], 0);		//將選項放入MAP, 初始化都是零票
-							info.put(option[j], null);		//將選項放入MAP, 初始化都是零票
+							result.put(option[j].trim(), 0);		//將選項放入MAP, 初始化都是零票
+							info.put(option[j].trim(), null);		//將選項放入MAP, 初始化都是零票
 						}
 						Elements ele = doc.getElementsByClass("push");
 						for (int i = 0; i < ele.size(); i ++) {
@@ -90,7 +89,6 @@ public class PushVoteServlet extends HttpServlet {
 							String vote = "";
 							String[] tmp = null; 
 							if (content.contains("@")) {
-								
 								if (content.indexOf("@") != content.lastIndexOf("@")) {	//多個 @, 也就是有可能多筆投票
 									String tmpContent = content.substring(content.indexOf(":") + 1, content.lastIndexOf("@"));
 									tmp = tmpContent.split("@");
@@ -121,10 +119,10 @@ public class PushVoteServlet extends HttpServlet {
 						int totalVoteCount = 0;
 						for (int i = 0; i < option.length; i ++) {
 							JSONObject jo = new JSONObject();
-							jo.put("keyword", option[i]);
-							jo.put("count", result.get(option[i]));
-							jo.put("voter", info.get(option[i]));
-							totalVoteCount = totalVoteCount + (info.get(option[i]) == null ? 0 : info.get(option[i]).size());
+							jo.put("keyword", option[i].trim());
+							jo.put("count", result.get(option[i].trim()));
+							jo.put("voter", info.get(option[i].trim()));
+							totalVoteCount = totalVoteCount + (info.get(option[i].trim()) == null ? 0 : info.get(option[i].trim()).size());
 							joArray.add(jo);
 						}
 						JSONObject jo2 = new JSONObject();
@@ -247,6 +245,7 @@ public class PushVoteServlet extends HttpServlet {
 				info.put(vote, tt);
 				
 			} else if (!userObj.contains(vote) && count >= voted) {	//沒有投過這個選項, 票數尚未滿
+
 				result.put(vote, result.get(vote) + 1);				//給這次要投的加一票。
 				userObj.add(vote);									//沒有的話加進List記錄內
 				user.put(id, userObj);								//再把資料放進userMap

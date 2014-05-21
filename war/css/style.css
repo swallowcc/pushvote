@@ -35,6 +35,19 @@
   z-index:2;
 }
 
+#votelistframe {
+  display:none;
+  background:#dcedcf;
+  border:1px solid #dcedcf; padding:20px;
+  width:540px;
+  position:fixed; top:25%; left:44.5%; 
+  margin-left:-200px; margin-top:-100px;
+  _position: absolute; /* position fixed for IE6 */
+  _top:expression(documentElement.scrollTop+(documentElement.clientHeight-this.clientHeight)/2);
+  _margin-top:0;
+  z-index:2;
+}
+
 #userList {
   display:none;	
   background:#dcedcf;

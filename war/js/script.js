@@ -27,9 +27,38 @@ function userList(voter) {
 }
 function hide() {
 	$('#userList').hide();
+	$('#votelistframe').hide();
+}
+function myfocus() {
+	$('#boardNm').val("").css('color', 'black');
+}
+function myblur() {
+	if($.trim($('#boardNm').val()).length == 0) {
+		$('#boardNm').val('若未輸入值，預設西洽').css('color', 'silver');
+	}
+}
+function votelistsend() {
+	$('#votelistframe').append("<center><span id='loading2' text-align:right; width:12px; height:12px; color:red;'><img style='width:40px; height:40px;'src='https://rawgit.com/swallowcc/pushvote/master/war/images/loading.gif' /><font color='red'> data loading now....</font></span></center>")
+	var value = $('#boardNm').val();
+	if (value == '若未輸入值，預設西洽' || $.trim(value).length == 0) {
+		value = 'C_Chat';
+	}
+	$.ajax({
+		url: "votelist",
+		type: "post",
+		data: "BN=" + value+"&getday=" + $('#getday').val(),
+		success: function(data) {
+			var response = jQuery.parseJSON(data);
+			$('#votelistframe').empty().append("<table width='510' border='0' id='votelistTable'><tr><th>Date</th><th>ID</th><th>Subject</th></tr>");
+			for (var i = 0; i < response.length; i ++) {
+				$('#votelistTable').append("<tr><td>"+response[i].date+"</td><td>"+response[i].author+"</td><td><a href='http://www.ptt.cc"+response[i].link+"' target='_blank'>"+response[i].title+"</a></td></tr>");
+			}
+			$('#votelistframe').append("</table><hr/><center><input type='button' value='close' onclick='hide()' /></center>");
+		}
+	});
 }
 $(function(){
-	$('#userList').draggable();
+	$('#userList, #votelistframe').draggable();
 	$('#mainframe, #introframe').shadow();
 	$('#sDate, #eDate').datepicker({ dateFormat: 'mm/dd' });
 	$('#append').click(function(){
@@ -61,6 +90,10 @@ $(function(){
 	})
 	$('#intro').click(function(){
 		$('#introframe').fadeToggle("fast");
+	});
+	$('#votelist').click(function(){
+		$('#votelistframe').empty().append("<center>英文版名: <input type='text' name='boardNm' id='boardNm' value='若未輸入值，預設西洽' style='color:silver;' onfocus='myfocus()' onblur='myblur()'/> <input type='text' name='getday' id='getday' size='1' value='3' /> 天內的推投文 <input type='button' value='send' onclick='votelistsend()'/></center><hr/>");
+		$('#votelistframe').fadeToggle("fast");
 	});
 	$('#btn').click(function(){
 		$('#introframe').hide();
@@ -123,6 +156,7 @@ $(function(){
 }).keydown(function(e) {
     if(e.which == 27){ 
         $('#introframe').hide(); 
+        $('#votelistframe').hide(); 
         $('#userList').hide(); 
     } 
 }); 
