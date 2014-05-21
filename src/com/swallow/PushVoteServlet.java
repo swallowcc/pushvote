@@ -2,9 +2,7 @@ package com.swallow;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,15 +21,15 @@ import org.jsoup.select.Elements;
 @SuppressWarnings("serial")
 public class PushVoteServlet extends HttpServlet {
 
+	private Utils utils = new Utils();
+	
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		System.out.println("GET");
 		this.doProcess(req, resp);
 	}
 	
 	@Override
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		System.out.println("POST");
 		this.doProcess(req, resp);
 	}
 	
@@ -58,7 +56,7 @@ public class PushVoteServlet extends HttpServlet {
 				Map<String, List<String>> info = new HashMap<String, List<String>>();	//裝載選票資訊, 所投選項/IDs
 				List<String> userId = new ArrayList<String>();
 				
-				if (doc.select("title").text().contains(keyword)) {
+				if (doc.select("title").text().startsWith(keyword)) {
 					String[] option = null;
 					if (input != null) {
 						if (!options.equals("none") || input.equals("oneline")) {
@@ -101,7 +99,7 @@ public class PushVoteServlet extends HttpServlet {
 							if (!vote.equals("") && tmp == null) {
 								if (sDate == null || eDate == null || sDate.trim().length() == 0 || eDate.trim().length() == 0) {	//不開啓日期過濾
 									process(id, vote, result, user, count, reVote, userId, info);
-								} else if (dateCheck(date, sDate, eDate)) {	//開啟日期過濾
+								} else if (utils.dateCheck(date, sDate, eDate)) {	//開啟日期過濾
 									process(id, vote, result, user, count, reVote, userId, info);
 								}
 							} else if (vote.equals("") && tmp != null) {	//多票數回圈		
@@ -109,7 +107,7 @@ public class PushVoteServlet extends HttpServlet {
 									String tmpVote = tmp[k] == null || tmp[k].trim().length() == 0 ? "" : tmp[k].replace("　", "").trim();
 									if (sDate == null || eDate == null || sDate.trim().length() == 0 || eDate.trim().length() == 0) {	//不開啓日期過濾
 										process(id, tmpVote, result, user, count, reVote, userId, info);
-									} else if (dateCheck(date, sDate, eDate)) {	//開啟日期過濾
+									} else if (utils.dateCheck(date, sDate, eDate)) {	//開啟日期過濾
 										process(id, tmpVote, result, user, count, reVote, userId, info);
 									}
 								}
@@ -145,7 +143,6 @@ public class PushVoteServlet extends HttpServlet {
 				resp.getWriter().println("3");
 			}
 		}
-		System.out.println("done");
 	}
 	
 	public static void process (String id, String vote, Map<String, Integer> result, 
@@ -264,32 +261,4 @@ public class PushVoteServlet extends HttpServlet {
 			userId.add(id);
 		}
 	}
-	
-	public static boolean dateCheck(String postDate, String startDate, String endDate) throws ParseException {
-		try {
-			int x = stringToDate(startDate).compareTo(stringToDate(postDate));
-			int y = stringToDate(endDate).compareTo(stringToDate(postDate));
-
-			if ((x == 1 && y == 1) || (x == -1 && y == -1)) {
-				return false;
-			} else {
-				return true;
-			}
-		} catch (NullPointerException e) {
-			return false;
-		}
-	}
-	
-	public static Date stringToDate(String dates) throws ParseException {
-		if (dates != null && dates.trim().length() != 0) {
-			SimpleDateFormat sdf = new SimpleDateFormat("M/dd");
-			try {
-				return sdf.parse(dates);
-			} catch (ParseException e) {
-				throw new ParseException(dates, 0);
-			}
-		} else {
-			return null;
-		}
-	}	
 }
