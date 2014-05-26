@@ -20,8 +20,8 @@ public class Utils {
 			return Integer.parseInt(x) + 1; 
 		} catch (IOException e) {
 			e.printStackTrace();
+			return 0;
 		}
-		return 0;
 	}
 	
 	public boolean dateCheck(String postDate, String startDate, String endDate) throws ParseException {

@@ -48,16 +48,49 @@ function votelistsend() {
 		type: "post",
 		data: "BN=" + value+"&getday=" + $('#getday').val(),
 		success: function(data) {
-			var response = jQuery.parseJSON(data);
-			$('#votelistframe').empty().append("<table width='510' border='0' id='votelistTable'><tr><th>Date</th><th>ID</th><th>Subject</th></tr>");
-			for (var i = 0; i < response.length; i ++) {
-				$('#votelistTable').append("<tr><td>"+response[i].date+"</td><td>"+response[i].author+"</td><td><a href='http://www.ptt.cc"+response[i].link+"' target='_blank'>"+response[i].title+"</a></td></tr>");
+			
+			switch (parseInt(data)) {
+			case 0:
+				alert('抱歉, 頁面無法讀取!');
+				$('#loading2').hide();
+				break;
+			default:
+				var response = jQuery.parseJSON(data);
+				$('#votelistframe').empty().append("<table width='510' border='0' id='votelistTable'><tr><th>Date</th><th>ID</th><th>Subject</th></tr>");
+				for (var i = 0; i < response.length; i ++) {
+					$('#votelistTable').append("<tr><td>"+response[i].date+"</td><td>"+response[i].author+"</td><td><a href='http://www.ptt.cc"+response[i].link+"' target='_blank'>"+response[i].title+"</a></td></tr>");
+				}
+				$('#votelistframe').append("</table><hr/><center><input type='button' value='close' onclick='hide()' /></center>");
+				break;
 			}
-			$('#votelistframe').append("</table><hr/><center><input type='button' value='close' onclick='hide()' /></center>");
 		}
 	});
 }
 $(function(){
+	$('.pointrank').click(function(){
+		if ($("input[name='pointrank']:checked").val() == 'O' && $('#count').val() > 1 && $('#count').val() <= 5) {
+			$('#pr').append('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+			for (var i = 0; i < $('#count').val(); i++) {
+				$('#pr').append((i+1) + ", <input type='text' name='p" + i + "' size='1'/>　");
+			}
+			$('#pr').append('<br/><br/>');
+		} else if ($(this).val() == 'X') {
+			$('#pr').empty();
+		}
+	});
+	$('#count').keyup(function(){
+		$('#pr').empty();
+		if ($("input[name='pointrank']:checked").val() == 'O' && $(this).val() > 1 && $(this).val() <= 5) {
+			$('#pr').append('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+			for (var i = 0; i < $(this).val(); i++) {
+				$('#pr').append((i+1) + "：<input type='text' name='p" + i + "' size='1'/>　");
+			}
+			$('#pr').append('<br/><br/>');
+		} else if ($(this).val() == 'X') {
+			$('#pr').empty();
+		}
+	});
+	
 	$('#userList, #votelistframe').draggable();
 	$('#mainframe, #introframe').shadow();
 	$('#sDate, #eDate').datepicker({ dateFormat: 'mm/dd' });
@@ -144,7 +177,13 @@ $(function(){
 							myvote = ((response[i].count/response[response.length - 1].tv) * 100).toFixed(1) + "%"; 	//得票率
 							myvote2 = ((response[i].count/response[response.length - 1].tu) * 100).toFixed(1) + "%";	//得票分佈
 						}
-						$('#mt').append("<tr><td>"+response[i].keyword+"</td><td>"+response[i].count+"</td><td>"+myvote+"</td><td>"+myvote2+"</td><td><img src='/images/user.png' onclick=\"userList('"+ voter +"')\" style='cursor: pointer; width:30px; height:30px;'></td></tr>");
+						var points = response[i].points == null ? 0 : response[i].points;
+						if ($("input[name='pointrank']:checked").val() == 'O') {
+							$('#mt').append("<tr><td>"+response[i].keyword+"</td><td>"+points+"</td><td>"+myvote+"</td><td>"+myvote2+"</td><td><img src='/images/user.png' onclick=\"userList('"+ voter +"')\" style='cursor: pointer; width:30px; height:30px;'></td></tr>");
+							
+						} else {
+							$('#mt').append("<tr><td>"+response[i].keyword+"</td><td>"+response[i].count+"</td><td>"+myvote+"</td><td>"+myvote2+"</td><td><img src='/images/user.png' onclick=\"userList('"+ voter +"')\" style='cursor: pointer; width:30px; height:30px;'></td></tr>");
+						}
 					}
 					$('#mt').append("</table>");
 					$('#loading').hide();

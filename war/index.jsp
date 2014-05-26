@@ -23,11 +23,11 @@
 	<table width='500'>
 		<tr>
 			<td>
-				<h1>PTT推文投票統計</h1>v1.6.2
+				<h1>PTT推文投票統計</h1>v1.7.2
 			</td>
 			<td>
 				<span style='position:relative; top:10px;'><a href='#' id='intro'>使用說明</a></span><br/>
-				<span style='position:relative; top:10px;'><a href='#' id='votelist'>最近一周的投票清單</a></span><br/>
+				<span style='position:relative; top:10px;'><a href='#' id='votelist'>近期投票清單</a></span><br/>
 			</td>
 		</tr>
 	</table>
@@ -41,6 +41,8 @@
 		文章網址: <input type='text' name='url' id='url' size='60'><br/>
 		日期區間: <input type='text' name='sDate' id='sDate' readonly/> ~ <input type='text' name='eDate' id='eDate' readonly/><br />
 		重投設定: <input type='radio' name='revote' value='O'>允許  <input type='radio' name='revote' value='X' checked='checked'>不允許<br/>
+		<!-- 灌票模式: <input type='radio' name='multivote' value='O'>允許  <input type='radio' name='multivote' value='X' checked='checked'>不允許<br/> -->
+		積分模式: <input type='radio' name='pointrank' class='pointrank' value='O'>允許  <input type='radio' name='pointrank' class='pointrank' value='X' checked='checked'>不允許<br/><span id='pr'></span>
 		可投票數: <input type='text' name='count' id='count' size='5' value='1'>&nbsp;&nbsp;&nbsp;&nbsp;<input type='button' value='送出查詢' id='send'><span id='loading' style='display:none; text-align:right; width:12px; height:12px; color:red;'><img style='width:40px; height:40px;'src='https://rawgit.com/swallowcc/pushvote/master/war/images/loading.gif' /> data loading now....</span>
 	</form>
 	<p>

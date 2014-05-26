@@ -19,7 +19,7 @@ import org.jsoup.select.Elements;
 public class VoteListServlet extends HttpServlet {
 
 	private Utils utils = new Utils();
-
+	
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		try {
@@ -48,36 +48,45 @@ public class VoteListServlet extends HttpServlet {
 		String getday = req.getParameter("getday") == null || req.getParameter("getday").trim().length() == 0 ? "3" : req.getParameter("getday");
 		int getdayInt = Integer.parseInt(getday) > 7 ? 7 : Integer.parseInt(getday);
 		int nowPage = utils.nowPageNm(boardName);
-		boolean flag = true;
-		JSONArray joArray = new JSONArray();
-		
-		while (flag) {
-			String url = "http://www.ptt.cc/bbs/"+boardName+"/index" + nowPage + ".html";
-			Document doc = Jsoup.connect(url).timeout(10000).get();
-			Elements rent = doc.getElementsByClass("r-ent");
-			for (int i = 0; i < rent.size(); i ++) {
-				String date = rent.get(i).getElementsByClass("date").text();
-				String author = rent.get(i).getElementsByClass("author").text();
-				String title = rent.get(i).getElementsByClass("title").text();
-				String link = rent.get(i).getElementsByClass("title").select("a").attr("href");
-				SimpleDateFormat sdf = new SimpleDateFormat("M/dd");
-				String sDate = sdf.format(new Date());
-				String eDate = sdf.format(new Date(new Date().getTime() - (86400000 * getdayInt)));
-				if (utils.dateCheck(date, sDate, eDate)) {
-					if (title.startsWith("[推投]")) {
-						JSONObject joMap = new JSONObject();
-						joMap.put("date", date);
-						joMap.put("title", title);
-						joMap.put("author", author);
-						joMap.put("link", link);
-						joArray.add(joMap);
+		if (nowPage == 0) {
+			resp.getWriter().println(nowPage+"");
+		} else {
+			boolean flag = true;
+			JSONArray joArray = new JSONArray();
+			
+			while (flag) {
+				String url = "http://www.ptt.cc/bbs/" + boardName + "/index" + nowPage + ".html";
+				Document doc = Jsoup.connect(url).timeout(10000).get();
+				Elements rent = doc.getElementsByClass("r-ent");
+				for (int i = 0; i < rent.size(); i ++) {
+					String date = rent.get(i).getElementsByClass("date").text();
+					String author = rent.get(i).getElementsByClass("author").text();
+					String title = rent.get(i).getElementsByClass("title").text();
+					String link = rent.get(i).getElementsByClass("title").select("a").attr("href");
+					SimpleDateFormat sdf = new SimpleDateFormat("M/dd");
+					String sDate = sdf.format(new Date());
+					String eDate = sdf.format(new Date(new Date().getTime() - (86400000 * getdayInt)));
+					
+					if (sDate.equals(date)) {		//今日資料，隨時更動
+						
 					}
-				} else {
-					flag = false;
+					
+					if (utils.dateCheck(date, sDate, eDate)) {
+						if (title.startsWith("[推投]")) {
+							JSONObject joMap = new JSONObject();
+							joMap.put("date", date);
+							joMap.put("title", title);
+							joMap.put("author", author);
+							joMap.put("link", link);
+							joArray.add(joMap);
+						}
+					} else {
+						flag = false;
+					}
 				}
+				nowPage -- ;
 			}
-			nowPage -- ;
+			resp.getWriter().write(joArray.toJSONString());
 		}
-		resp.getWriter().write(joArray.toJSONString());
 	}
 }

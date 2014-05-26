@@ -22,7 +22,6 @@ import org.jsoup.select.Elements;
 public class PushVoteServlet extends HttpServlet {
 
 	private Utils utils = new Utils();
-	
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		this.doProcess(req, resp);
@@ -43,8 +42,45 @@ public class PushVoteServlet extends HttpServlet {
 		String options = req.getParameter("hiddenValue") == null || req.getParameter("hiddenValue").trim().length() == 0 ? "none" : req.getParameter("hiddenValue");
 		String reVote = req.getParameter("revote");
 		String count = req.getParameter("count") == null || req.getParameter("count").trim().length() == 0 || req.getParameter("count").equals("0") ? "1" : req.getParameter("count");
+		int co = Integer.parseInt(count);
 		String url = req.getParameter("url");
 		String input = req.getParameter("input");
+		String pr = req.getParameter("pointrank");
+		int p0 = -1;
+		int p1 = -1;
+		int p2 = -1;
+		int p3 = -1;
+		int p4 = -1;
+		Map<String, Integer> points = new HashMap<String, Integer>();
+		if (pr != null && pr.equals("O")) {
+			try {
+				p0 = req.getParameter("p0") != null ? Integer.parseInt(req.getParameter("p0")) : -1;
+				points.put("p0", p0);
+			} catch (Exception e) {}
+			try {
+				p1 = req.getParameter("p1") != null ? Integer.parseInt(req.getParameter("p1")) : -1;
+				points.put("p1", p1);
+			} catch (Exception e) {}
+			if (co > 2) {
+				try {
+					p2 = req.getParameter("p2") != null ? Integer.parseInt(req.getParameter("p2")) : -1;
+					points.put("p2", p2);
+				} catch (Exception e) {}
+			}
+			if (co > 3) {
+				try {
+					p3 = req.getParameter("p3") != null ? Integer.parseInt(req.getParameter("p3")) : -1;
+					points.put("p3", p3);
+				} catch (Exception e) {}
+			}
+			if (co > 4 && co <= 5) {
+				try {
+					p4 = req.getParameter("p4") != null ? Integer.parseInt(req.getParameter("p4")) : -1;
+					points.put("p4", p4);
+				} catch (Exception e) {}
+			}
+//			System.out.println("#p0 ~ p4 : " + p0 + ", " + p1 + ", " + p2 + ", " + p3 + ", " + p4);
+		}
 		if (url == null || url.trim().length() == 0 || !url.contains("ptt.cc")) {
 			resp.getWriter().println("4");
 		} else {
@@ -54,7 +90,11 @@ public class PushVoteServlet extends HttpServlet {
 				Map<String, Integer> result = new HashMap<String, Integer>();			//裝載投票結果, 選項/總票數
 				Map<String, List<String>> user = new HashMap<String, List<String>>();	//裝載使用者資訊, IDs/所投選項
 				Map<String, List<String>> info = new HashMap<String, List<String>>();	//裝載選票資訊, 所投選項/IDs
-				List<String> userId = new ArrayList<String>();
+
+				Map<String, Integer> result2 = new HashMap<String, Integer>();			//裝載投票結果, 選項/積分數
+				Map<String, List<String>> info2 = new HashMap<String, List<String>>();	//裝載選票資訊, 所投選項/IDs with point
+				
+				List<String> userId = new ArrayList<String>();							//所有使用者
 				
 				if (doc.select("title").text().startsWith(keyword)) {
 					String[] option = null;
@@ -98,28 +138,84 @@ public class PushVoteServlet extends HttpServlet {
 							
 							if (!vote.equals("") && tmp == null) {
 								if (sDate == null || eDate == null || sDate.trim().length() == 0 || eDate.trim().length() == 0) {	//不開啓日期過濾
-									process(id, vote, result, user, count, reVote, userId, info);
+									process(id, vote, result, user, count, reVote, userId, info, points, pr, info2, result2);
 								} else if (utils.dateCheck(date, sDate, eDate)) {	//開啟日期過濾
-									process(id, vote, result, user, count, reVote, userId, info);
+									process(id, vote, result, user, count, reVote, userId, info, points, pr, info2, result2);
 								}
 							} else if (vote.equals("") && tmp != null) {	//多票數回圈		
 								for (int k = 0; k < tmp.length; k ++) {
 									String tmpVote = tmp[k] == null || tmp[k].trim().length() == 0 ? "" : tmp[k].replace("　", "").trim();
 									if (sDate == null || eDate == null || sDate.trim().length() == 0 || eDate.trim().length() == 0) {	//不開啓日期過濾
-										process(id, tmpVote, result, user, count, reVote, userId, info);
+										process(id, tmpVote, result, user, count, reVote, userId, info, points, pr, info2, result2);
 									} else if (utils.dateCheck(date, sDate, eDate)) {	//開啟日期過濾
-										process(id, tmpVote, result, user, count, reVote, userId, info);
+										process(id, tmpVote, result, user, count, reVote, userId, info, points, pr, info2, result2);
 									}
 								}
 							}
 						}
 						JSONArray joArray = new JSONArray();
 						int totalVoteCount = 0;
+						List<String> processDone = new ArrayList<String>();//裝載處理完畢IDs
+						//result2 把積分分數放進去
+						//info -> 選項/IDs, 用選項把ID拿出來，然後處理ID後放回去
+						if (pr.equals("O")) {
+							for (int j = 0; j < userId.size(); j ++) {
+								if (!processDone.contains(userId.get(j))) {
+									for (int k = 0; k < user.get(userId.get(j)).size(); k++) {	//看有幾個選項
+										String tmp = user.get(userId.get(j)).get(k);	//選項loop
+										List<String> myids = info.get(tmp); //所有投這個選項的ID
+										myids.remove(userId.get(j));
+										if (k == 0) {
+											myids.add(userId.get(j)+"("+points.get("p0")+")");
+											if (result2.get(tmp) == null) {
+												result2.put(tmp, points.get("p0"));
+											} else {
+												result2.put(tmp, result2.get(tmp) + points.get("p0"));
+											}
+										}
+										if (k == 1) {
+											myids.add(userId.get(j)+"("+points.get("p1")+")");
+											if (result2.get(tmp) == null) {
+												result2.put(tmp, points.get("p1"));
+											} else {
+												result2.put(tmp, result2.get(tmp) + points.get("p1"));
+											}
+										}
+										if (k == 2) {
+											myids.add(userId.get(j)+"("+points.get("p2")+")");
+											if (result2.get(tmp) == null) {
+												result2.put(tmp, points.get("p2"));
+											} else {
+												result2.put(tmp, result2.get(tmp) + points.get("p2"));
+											}
+										}
+										if (k == 3) {
+											myids.add(userId.get(j)+"("+points.get("p3")+")");
+											if (result2.get(tmp) == null) {
+												result2.put(tmp, points.get("p3"));
+											} else {
+												result2.put(tmp, result2.get(tmp) + points.get("p3"));
+											}
+										}
+										if (k == 4) {
+											myids.add(userId.get(j)+"("+points.get("p4")+")");
+											if (result2.get(tmp) == null) {
+												result2.put(tmp, points.get("p4"));
+											} else {
+												result2.put(tmp, result2.get(tmp) + points.get("p4"));
+											}
+										}
+									}
+									processDone.add(userId.get(j));
+								}
+							}
+						}
 						for (int i = 0; i < option.length; i ++) {
 							JSONObject jo = new JSONObject();
 							jo.put("keyword", option[i].trim());
 							jo.put("count", result.get(option[i].trim()));
 							jo.put("voter", info.get(option[i].trim()));
+							jo.put("points", result2.get(option[i].trim()));
 							totalVoteCount = totalVoteCount + (info.get(option[i].trim()) == null ? 0 : info.get(option[i].trim()).size());
 							joArray.add(jo);
 						}
@@ -147,7 +243,8 @@ public class PushVoteServlet extends HttpServlet {
 	
 	public static void process (String id, String vote, Map<String, Integer> result, 
 			Map<String, List<String>> user, String co, String reVote, List<String> userId,
-			Map<String, List<String>> info) {
+			Map<String, List<String>> info, Map<String, Integer> points, String pr, 
+			Map<String, List<String>> info2, Map<String, Integer> result2) {
 		
 		int voted = 0;
 		if (user.get(id) != null) {
@@ -155,6 +252,7 @@ public class PushVoteServlet extends HttpServlet {
 		}
 		int count = Integer.parseInt(co);
 		if (!user.containsKey(id) && result.containsKey(vote) && voted == 0) {	
+//			result2.put(vote,  result2.get(vote) + points.get("p0"));
 			//還沒投過, 直接塞值進去即可
 			result.put(vote, result.get(vote) + 1);
 			List<String> tmp = new ArrayList<String>();
