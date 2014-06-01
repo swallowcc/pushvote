@@ -2,22 +2,22 @@
 	margin-left:auto; 
 	margin-right:auto; 
 	margin-top:10px; 
-	width:500px;
+	width:550px;
 	position:relative;
 }
 
 #inputs {
 	margin-left:10px;
-	width:480px;
+	width:540px;
 }
 
 #showArea {
-	width:480px;
+	width:550px;
 	margin-left:30px;
 	padding-bottom:30px;
 }
 #showArea2 {
-	width:480px;
+	width:550px;
 	margin-left:30px;
 	padding-bottom:30px;
 }

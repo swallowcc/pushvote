@@ -20,10 +20,10 @@
 <body>
 <div id='mainframe'>
 <div id='inputs'>
-	<table width='500'>
+	<table width='520'>
 		<tr>
 			<td>
-				<h1>PTT推文投票統計</h1>v1.7.2
+				<h1>PTT推文投票統計</h1>v1.7.3
 			</td>
 			<td>
 				<span style='position:relative; top:10px;'><a href='#' id='intro'>使用說明</a></span><br/>
@@ -35,17 +35,21 @@
 	<form id='myform'>
 		<input type='hidden' name='hiddenValue' id='hiddenValue' />
 		<input type="hidden" id="dynamic">
-		輸入方式: <input type='radio' name='input' id='single' value='single' value='single' checked/>單筆輸入　<input type='radio' name='input' id='oneline' value='oneline'/>簡易輸入　
-		<input type='radio' name='input' id='web' value='web'/>自動輸入(beta)<br/>
-		投票選項: <input type='text' name='target' id='target' />　<input type='button' value='新增選項' id='append' /><br/>
-		文章網址: <input type='text' name='url' id='url' size='60'><br/>
-		日期區間: <input type='text' name='sDate' id='sDate' readonly/> ~ <input type='text' name='eDate' id='eDate' readonly/><br />
-		重投設定: <input type='radio' name='revote' value='O'>允許  <input type='radio' name='revote' value='X' checked='checked'>不允許<br/>
+		<table width='520' border='0'>
+		<tr><td width='12%'>輸入方式:</td><td><input class='myinput' type='radio' name='input' id='single' value='single' value='single' checked/>單筆輸入　<input class='myinput' type='radio' name='input' id='oneline' value='oneline'/>簡易輸入　<input class='myinput' type='radio' name='input' id='web' value='web'/>自動輸入　<!-- <input class='myinput' type='radio' name='input' id='rumble' value='rumble'/>亂鬥模式 --></td></tr>
+		<tr id='options'><td>投票選項:</td><td><input type='text' name='target' id='target' />　<input type='button' value='新增選項' id='append' /></td></tr>
+		<tr><td>文章網址:</td><td><input type='text' name='url' id='url' size='60'></td></tr>
+		<tr><td>日期區間:</td><td><input type='text' name='sDate' id='sDate' readonly/> ~ <input type='text' name='eDate' id='eDate' readonly/></td></tr>
+		<tr><td>可投票數:</td><td><input type='text' name='count' id='count' size='5' value='1'></td></tr>
+		<tr><td>重投設定:</td><td><input type='radio' name='revote' value='O'>開啓　<input type='radio' name='revote' value='X' checked='checked'>關閉</td></tr>
+		<tr><td>積分模式:<br/>(Max10)</td><td><input type='radio' name='pointrank' class='pointrank' value='O'>開啓　<input type='radio' name='pointrank' class='pointrank' value='X' checked='checked'>關閉<span id='pr'></span></td></tr>
+		<tr><td colspan='2' style='text-align:center;'>
+			<input type='button' value='送出查詢' id='send' style='margin-left:auto; margin-right:auto;'><br/>
+			<span id='loading' style='display:none; text-align:right; width:12px; height:12px; color:red;'><img style='width:40px; height:40px;'src='https://rawgit.com/swallowcc/pushvote/master/war/images/loading.gif' /> data loading now....</span>
+		</td></tr>
+		</table>
 		<!-- 灌票模式: <input type='radio' name='multivote' value='O'>允許  <input type='radio' name='multivote' value='X' checked='checked'>不允許<br/> -->
-		積分模式: <input type='radio' name='pointrank' class='pointrank' value='O'>允許  <input type='radio' name='pointrank' class='pointrank' value='X' checked='checked'>不允許<br/><span id='pr'></span>
-		可投票數: <input type='text' name='count' id='count' size='5' value='1'>&nbsp;&nbsp;&nbsp;&nbsp;<input type='button' value='送出查詢' id='send'><span id='loading' style='display:none; text-align:right; width:12px; height:12px; color:red;'><img style='width:40px; height:40px;'src='https://rawgit.com/swallowcc/pushvote/master/war/images/loading.gif' /> data loading now....</span>
 	</form>
-	<p>
 </div>
 <div id='showArea'></div>
 <div id='showArea2'></div>
@@ -69,7 +73,7 @@
 	註：只要投票格式不符合，就不會列入計算，<br/>
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;因此即使允許重投，推發一般聊天文也不會洗掉結果。
 	<hr/>
-	<div style='width:480px; text-align:center;'>
+	<div style='width:500px; text-align:center;'>
 	<input type='button' id='btn' value='close'>
 	</div>
 </div>

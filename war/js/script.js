@@ -10,7 +10,7 @@ function removeIt(id, str2) {
     }
 	var str = "";
 	for (var i = 0; i < array.length; i ++) {
-		str += "<br/><span style='padding-left:20px;' id="+i+"><img width='12' height='12' src='https://rawgit.com/swallowcc/pushvote/master/war/images/del.png' onclick=\"removeIt('"+i +"', '"+array[i]+"')\" style='cursor: pointer;' />　　　"+array[i]+"</span>";
+		str += "<br/><span style='padding-left:20px;' id=" + i + "><img width='12' height='12' src='https://rawgit.com/swallowcc/pushvote/master/war/images/del.png' onclick=\"removeIt('" + i + "', '" + array[i] + "')\" style='cursor: pointer;' />　　　" + array[i] + "</span>";
 	}
 	$('#showArea').html(str);
 	$('#showArea2').empty();
@@ -67,25 +67,36 @@ function votelistsend() {
 	});
 }
 $(function(){
+//	$("input[name='rumble']").click(function(){
+//		if ($(this).val("O"))
+//			$("input[name='pointrank']").val("X").attr('disabled','disabled');
+//		if ($(this).val("X"))
+//			$("input[name='pointrank']").val("X").attr('disabled','disabled');
+//		
+//	});
 	$('.pointrank').click(function(){
-		if ($("input[name='pointrank']:checked").val() == 'O' && $('#count').val() > 1 && $('#count').val() <= 5) {
-			$('#pr').append('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+		if ($("input[name='pointrank']:checked").val() == 'O' && $('#count').val() > 1 && $('#count').val() <= 10) {
+			var total = $('#count').val();
+			$('#pr').append('&nbsp;&nbsp;<br/><table><tr>');
 			for (var i = 0; i < $('#count').val(); i++) {
-				$('#pr').append((i+1) + ", <input type='text' name='p" + i + "' size='1'/>　");
+				$('#pr').append("<td>"+(i+1)+": <input type='text' name='p" + i + "' style='width:23px; background-color: silver;' value='"+total+"'/>　</td>");
+				total --;
 			}
-			$('#pr').append('<br/><br/>');
+			$('#pr').append('</tr><table>');
 		} else if ($(this).val() == 'X') {
 			$('#pr').empty();
 		}
 	});
 	$('#count').keyup(function(){
 		$('#pr').empty();
-		if ($("input[name='pointrank']:checked").val() == 'O' && $(this).val() > 1 && $(this).val() <= 5) {
-			$('#pr').append('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
-			for (var i = 0; i < $(this).val(); i++) {
-				$('#pr').append((i+1) + "：<input type='text' name='p" + i + "' size='1'/>　");
+		if ($("input[name='pointrank']:checked").val() == 'O' && $(this).val() > 1 && $(this).val() <= 10) {
+			var total = $('#count').val();
+			$('#pr').append('&nbsp;&nbsp;<br/><table><tr>');
+			for (var i = 0; i < $('#count').val(); i++) {
+				$('#pr').append("<td>"+(i+1)+": <input type='text' name='p" + i + "' style='width:23px; background-color: silver;' value='"+total+"'/>　</td>");
+				total --;
 			}
-			$('#pr').append('<br/><br/>');
+			$('#pr').append('</tr><table>');
 		} else if ($(this).val() == 'X') {
 			$('#pr').empty();
 		}
@@ -168,7 +179,13 @@ $(function(){
 				default:
 					var response = jQuery.parseJSON(data);
 					$('#showArea').empty();
-					$('#showArea2').empty().append("<div id='t1' style='text-align:right; width:440px; height:20px;'>總投票人數: "+response[response.length - 1].tu+" / 總投票數: "+response[response.length - 1].tv+" / <a href='#' id='copys'>複製結果</a></div><table width='440' border='1' style='word-break:break-all; text-align:center;' id='mt'><tr style='background-color: silver; text-align:center;'><th width='40%' style='text-align:center;'>選項</th><th width='15%' style='text-align:center;'>得點</th><th width='15%' style='text-align:center;'>得票率</th><th width='15%' style='text-align:center;'>得票分佈</th><th style='text-align:center;'>投票人ID</th></tr>");
+					$('#showArea2').empty().append("<div id='t1' style='text-align:right; width:500px; height:20px;'>總投票人數: "+response[response.length - 1].tu+" / 總投票數: "+response[response.length - 1].tv+" / <a href='#' id='copys'>複製結果</a></div>");
+					if ($("input[name='pointrank']:checked").val() == 'O') {
+						$('#showArea2').append("<table width='500' border='1' style='word-break:break-all; text-align:center;' id='mt'><tr style='background-color: silver; text-align:center;'><th width='40%' style='text-align:center;'>選項</th><th width='10%' style='text-align:center;'>得點</th><th width='10%' style='text-align:center;'>得票</th><th width='10%' style='text-align:center;'>平均<br/>得票</th><th width='15%' style='text-align:center;'>得票率</th><th width='15%' style='text-align:center;'>得票<br/>分佈</th><th style='text-align:center;'>投票人ID</th></tr>");
+					} else {
+						$('#showArea2').append("<table width='500' border='1' style='word-break:break-all; text-align:center;' id='mt'><tr style='background-color: silver; text-align:center;'><th width='40%' style='text-align:center;'>選項</th><th width='15%' style='text-align:center;'>得票數</th><th width='15%' style='text-align:center;'>得票率</th><th width='15%' style='text-align:center;'>得票分佈</th><th style='text-align:center;'>投票人ID</th></tr>");
+						
+					}
 					for (var i = 0; i < response.length - 1; i ++) {
 						var voter = response[i].voter == null ? "" : response[i].voter ;
 						var myvote = 0;
@@ -177,10 +194,12 @@ $(function(){
 							myvote = ((response[i].count/response[response.length - 1].tv) * 100).toFixed(1) + "%"; 	//得票率
 							myvote2 = ((response[i].count/response[response.length - 1].tu) * 100).toFixed(1) + "%";	//得票分佈
 						}
+						var avgPerVotePoint = 0;
 						var points = response[i].points == null ? 0 : response[i].points;
 						if ($("input[name='pointrank']:checked").val() == 'O') {
-							$('#mt').append("<tr><td>"+response[i].keyword+"</td><td>"+points+"</td><td>"+myvote+"</td><td>"+myvote2+"</td><td><img src='/images/user.png' onclick=\"userList('"+ voter +"')\" style='cursor: pointer; width:30px; height:30px;'></td></tr>");
-							
+							if (points != 0)
+							var avgPerVotePoint = points/response[i].count == null ? "0" : (points/response[i].count).toFixed(1);
+							$('#mt').append("<tr><td>"+response[i].keyword+"</td><td>"+points+"</td><td>"+response[i].count+"</td><td>"+avgPerVotePoint+"</td><td>"+myvote+"</td><td>"+myvote2+"</td><td><img src='/images/user.png' onclick=\"userList('"+ voter +"')\" style='cursor: pointer; width:30px; height:30px;'></td></tr>");
 						} else {
 							$('#mt').append("<tr><td>"+response[i].keyword+"</td><td>"+response[i].count+"</td><td>"+myvote+"</td><td>"+myvote2+"</td><td><img src='/images/user.png' onclick=\"userList('"+ voter +"')\" style='cursor: pointer; width:30px; height:30px;'></td></tr>");
 						}
