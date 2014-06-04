@@ -121,7 +121,7 @@ public class PushVoteServlet extends HttpServlet {
                 
                 List<String> userId = new ArrayList<String>();                          //所有使用者
                 
-                if (doc.select("title").text().startsWith(keyword)) {
+                if (doc.select("title").text().startsWith(keyword) || !doc.select("title").text().startsWith(keyword)) {
                     String[] option = null;
                     if (input != null) {
                         if (!options.equals("none") || input.equals("oneline")) {
@@ -152,20 +152,31 @@ public class PushVoteServlet extends HttpServlet {
                             StringBuffer tmpBuffer = new StringBuffer("");
                             for (int k = 0; k < ele2.size(); k ++) {
                                 String tmp1 = ele2.get(k).getElementsByClass("push-content").text();
-                                if (tmp1.charAt(0) == ':' && tmp1.contains("@")) {
+                                if (tmp1.charAt(0) == ':' && tmp1.contains("@") && tmp1.indexOf("@") == tmp1.lastIndexOf("@")) {
                                     String tmpContent = tmp1.substring(tmp1.indexOf(":") + 1, tmp1.indexOf("@"));
-                                    String test = "";
                                     if (!result.containsKey(tmpContent)) {
                                     	result.put(tmpContent.trim(), 0);       //將選項放入MAP, 初始化都是零票
                                         tmpBuffer.append(tmpContent.trim());
-                                        test = tmpContent.trim();
                                         if (k != ele2.size() - 1) {
                                         	tmpBuffer.append(",");  
-                                        	test += ",";
                                         }
                                     }
                                     if (!info.containsKey(tmpContent))
                                     	info.put(tmpContent.trim(), null);      //將選項放入MAP, 初始化都是零票
+                                } else if (tmp1.indexOf("@") != tmp1.lastIndexOf("@")) {
+                                    String tmpContent = tmp1.substring(tmp1.indexOf(":") + 1, tmp1.lastIndexOf("@"));
+                                    String[] tmps = tmpContent.split("@");
+                                    for (int ii = 0; ii < tmps.length; ii ++) {
+                                        if (!result.containsKey(tmpContent)) {
+                                        	result.put(tmps[ii].trim(), 0);       //將選項放入MAP, 初始化都是零票
+                                            tmpBuffer.append(tmps[ii].trim());
+                                            if (k != ele2.size() - 1) {
+                                            	tmpBuffer.append(",");  
+                                            }
+                                        }
+                                        if (!info.containsKey(tmps[ii].trim()))
+                                        	info.put(tmps[ii].trim(), null);      //將選項放入MAP, 初始化都是零票
+                                    }
                                 }
                             }
                             option = tmpBuffer.toString().split(",");
