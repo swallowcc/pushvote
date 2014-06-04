@@ -23,7 +23,7 @@
 	<table width='520'>
 		<tr>
 			<td>
-				<h1>PTT推文投票統計</h1>v1.7.3
+				<h1>PTT推文投票統計</h1>v2.0.0
 			</td>
 			<td>
 				<span style='position:relative; top:10px;'><a href='#' id='intro'>使用說明</a></span><br/>
@@ -36,7 +36,7 @@
 		<input type='hidden' name='hiddenValue' id='hiddenValue' />
 		<input type="hidden" id="dynamic">
 		<table width='520' border='0'>
-		<tr><td width='12%'>輸入方式:</td><td><input class='myinput' type='radio' name='input' id='single' value='single' value='single' checked/>單筆輸入　<input class='myinput' type='radio' name='input' id='oneline' value='oneline'/>簡易輸入　<input class='myinput' type='radio' name='input' id='web' value='web'/>自動輸入　<!-- <input class='myinput' type='radio' name='input' id='rumble' value='rumble'/>亂鬥模式 --></td></tr>
+		<tr><td width='12%'>輸入方式:</td><td><input class='myinput' type='radio' name='input' id='single' value='single' value='single' checked/>單筆輸入　<input class='myinput' type='radio' name='input' id='oneline' value='oneline'/>簡易輸入　<input class='myinput' type='radio' name='input' id='web' value='web'/>自動輸入　<input class='myinput' type='radio' name='input' id='nominate' value='nominate'/>提名模式 <input type='text' size='1' name='nominateMin' id='nominateMin' style='display:none; width:20px;' value='2'/>(Beta) </td></tr>
 		<tr id='options'><td>投票選項:</td><td><input type='text' name='target' id='target' />　<input type='button' value='新增選項' id='append' /></td></tr>
 		<tr><td>文章網址:</td><td><input type='text' name='url' id='url' size='60'></td></tr>
 		<tr><td>日期區間:</td><td><input type='text' name='sDate' id='sDate' readonly/> ~ <input type='text' name='eDate' id='eDate' readonly/></td></tr>

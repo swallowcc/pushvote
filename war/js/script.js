@@ -67,13 +67,12 @@ function votelistsend() {
 	});
 }
 $(function(){
-//	$("input[name='rumble']").click(function(){
-//		if ($(this).val("O"))
-//			$("input[name='pointrank']").val("X").attr('disabled','disabled');
-//		if ($(this).val("X"))
-//			$("input[name='pointrank']").val("X").attr('disabled','disabled');
-//		
-//	});
+	$('#nominate').click(function(){
+		$('#nominateMin').show();
+	});
+	$('.myinput:not(#nominate)').click(function(){
+        $('#nominateMin').hide(); 
+	});
 	$('.pointrank').click(function(){
 		if ($("input[name='pointrank']:checked").val() == 'O' && $('#count').val() > 1 && $('#count').val() <= 10) {
 			var total = $('#count').val();
