@@ -166,7 +166,6 @@ public class PushVoteServlet extends HttpServlet {
                                     }
                                     if (!info.containsKey(tmpContent))
                                     	info.put(tmpContent.trim(), null);      //將選項放入MAP, 初始化都是零票
-                                    System.out.println(test);
                                 }
                             }
                             option = tmpBuffer.toString().split(",");
@@ -232,15 +231,33 @@ public class PushVoteServlet extends HttpServlet {
                         for (int i = 0; i < option.length; i ++) {
                             JSONObject jo = new JSONObject();
                             int mycount = result.get(option[i].trim());
-                            jo.put("keyword", option[i].trim());
-                            jo.put("count", mycount);
-                            jo.put("voter", info.get(option[i].trim()));
-                            jo.put("points", result2.get(option[i].trim()));
-                            totalVoteCount = totalVoteCount + (info.get(option[i].trim()) == null ? 0 : info.get(option[i].trim()).size());
                             if (input.equals("nominate")) {
-                            	if (nMin <= mycount)
+                            	if (nMin <= mycount) {
+	                                jo.put("keyword", option[i].trim());
+	                                jo.put("count", mycount);
+	                                jo.put("voter", info.get(option[i].trim()));
+	                                jo.put("points", result2.get(option[i].trim()));
+	                                totalVoteCount = totalVoteCount + (info.get(option[i].trim()) == null ? 0 : info.get(option[i].trim()).size());
                             		joArray.add(jo);
+                            	} else {
+                            		if (mycount != 0) {
+                            			for (int ii = 0; ii < info.get(option[i].trim()).size(); ii ++) {
+                            				String id = info.get(option[i].trim()).get(ii);
+                    						id = id.substring(0, id.indexOf("("));
+                    						List<String> t = user.get(id);
+                    						t.remove(option[i].trim());
+                            				user.put(id, t);
+                            			}
+                            			result.remove(option[i].trim());
+                            			info.remove(option[i].trim());
+                            		}
+                            	}
                             } else {
+                                jo.put("keyword", option[i].trim());
+                                jo.put("count", mycount);
+                                jo.put("voter", info.get(option[i].trim()));
+                                jo.put("points", result2.get(option[i].trim()));
+                                totalVoteCount = totalVoteCount + (info.get(option[i].trim()) == null ? 0 : info.get(option[i].trim()).size());
                             	joArray.add(jo);
                             }
                         }
