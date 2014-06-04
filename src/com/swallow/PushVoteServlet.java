@@ -167,7 +167,7 @@ public class PushVoteServlet extends HttpServlet {
                                     String tmpContent = tmp1.substring(tmp1.indexOf(":") + 1, tmp1.lastIndexOf("@"));
                                     String[] tmps = tmpContent.split("@");
                                     for (int ii = 0; ii < tmps.length; ii ++) {
-                                        if (!result.containsKey(tmpContent)) {
+                                        if (!result.containsKey(tmps[ii].trim())) {
                                         	result.put(tmps[ii].trim(), 0);       //將選項放入MAP, 初始化都是零票
                                             tmpBuffer.append(tmps[ii].trim());
                                             if (k != ele2.size() - 1) {
