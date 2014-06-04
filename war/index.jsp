@@ -23,7 +23,7 @@
 	<table width='520'>
 		<tr>
 			<td>
-				<h1>PTT推文投票統計</h1>v2.0.0
+				<h1>PTT推文投票統計</h1>v2.0.2
 			</td>
 			<td>
 				<span style='position:relative; top:10px;'><a href='#' id='intro'>使用說明</a></span><br/>

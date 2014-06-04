@@ -243,7 +243,9 @@ public class PushVoteServlet extends HttpServlet {
                             		if (mycount != 0) {
                             			for (int ii = 0; ii < info.get(option[i].trim()).size(); ii ++) {
                             				String id = info.get(option[i].trim()).get(ii);
-                    						id = id.substring(0, id.indexOf("("));
+                            				if (pr.equals("O")) {
+                            					id = id.substring(0, id.indexOf("("));
+                            				}
                     						List<String> t = user.get(id);
                     						t.remove(option[i].trim());
                             				user.put(id, t);
