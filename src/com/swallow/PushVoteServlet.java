@@ -241,7 +241,12 @@ public class PushVoteServlet extends HttpServlet {
                         }
                         for (int i = 0; i < option.length; i ++) {
                             JSONObject jo = new JSONObject();
-                            int mycount = result.get(option[i].trim());
+                            int mycount = 0;
+                            try {
+                            	mycount = result.get(option[i].trim());
+                            } catch (Exception e) {
+                            	continue;
+                            }
                             if (input.equals("nominate")) {
                             	if (nMin <= mycount) {
 	                                jo.put("keyword", option[i].trim());
